@@ -1,0 +1,101 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using PimMedicationManagement.Data;
+using PimMedicationManagement.Models;
+
+namespace PimMedicationManagement.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class MedicamentoController : ControllerBase
+    {
+        private readonly AppDbContext _context;
+
+        public MedicamentoController(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        // GET: api/Medicamento (Lista todos os medicamentos)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Medicamento>>> GetMedicamentos()
+        {
+            return await _context.Medicamentos.ToListAsync();
+        }
+
+        // GET: api/Medicamento/5 (Busca um medicamento específico pelo ID)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Medicamento>> GetMedicamento(int id)
+        {
+            var medicamento = await _context.Medicamentos.FindAsync(id);
+
+            if (medicamento == null)
+            {
+                return NotFound("Medicamento não encontrado.");
+            }
+
+            return medicamento;
+        }
+
+        // POST: api/Medicamento (Cadastra um novo medicamento)
+        [HttpPost]
+        public async Task<ActionResult<Medicamento>> PostMedicamento(Medicamento medicamento)
+        {
+            _context.Medicamentos.Add(medicamento);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetMedicamento), new { id = medicamento.Id }, medicamento);
+        }
+
+        // PUT: api/Medicamento/5 (Atualiza os dados de um medicamento)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutMedicamento(int id, Medicamento medicamento)
+        {
+            if (id != medicamento.Id)
+            {
+                return BadRequest("O ID da URL não bate com o ID do medicamento.");
+            }
+
+            _context.Entry(medicamento).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!MedicamentoExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        // DELETE: api/Medicamento/5 (Deleta um medicamento)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteMedicamento(int id)
+        {
+            var medicamento = await _context.Medicamentos.FindAsync(id);
+            if (medicamento == null)
+            {
+                return NotFound();
+            }
+
+            _context.Medicamentos.Remove(medicamento);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool MedicamentoExists(int id)
+        {
+            return _context.Medicamentos.Any(e => e.Id == id);
+        }
+    }
+}
