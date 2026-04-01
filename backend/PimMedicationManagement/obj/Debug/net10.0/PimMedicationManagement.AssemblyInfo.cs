@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PimMedicationManagement")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f9ac308015ae8db14e90d9822d37c0d6d2772cca")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e1b5e8f98ab50354fb78c67eee686b73dbec4195")]
 [assembly: System.Reflection.AssemblyProductAttribute("PimMedicationManagement")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PimMedicationManagement")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
