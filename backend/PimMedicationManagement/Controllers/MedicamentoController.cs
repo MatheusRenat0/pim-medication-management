@@ -16,14 +16,13 @@ namespace PimMedicationManagement.Controllers
             _context = context;
         }
 
-        // GET: api/Medicamento (Lista todos os medicamentos)
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Medicamento>>> GetMedicamentos()
         {
             return await _context.Medicamentos.ToListAsync();
         }
 
-        // GET: api/Medicamento/5 (Busca um medicamento específico pelo ID)
+        
         [HttpGet("{id}")]
         public async Task<ActionResult<Medicamento>> GetMedicamento(int id)
         {
@@ -37,7 +36,6 @@ namespace PimMedicationManagement.Controllers
             return medicamento;
         }
 
-        // POST: api/Medicamento (Cadastra um novo medicamento)
         [HttpPost]
         public async Task<ActionResult<Medicamento>> PostMedicamento(Medicamento medicamento)
         {
@@ -47,7 +45,6 @@ namespace PimMedicationManagement.Controllers
             return CreatedAtAction(nameof(GetMedicamento), new { id = medicamento.Id }, medicamento);
         }
 
-        // PUT: api/Medicamento/5 (Atualiza os dados de um medicamento)
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMedicamento(int id, Medicamento medicamento)
         {
@@ -77,7 +74,6 @@ namespace PimMedicationManagement.Controllers
             return NoContent();
         }
 
-        // DELETE: api/Medicamento/5 (Deleta um medicamento)
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMedicamento(int id)
         {

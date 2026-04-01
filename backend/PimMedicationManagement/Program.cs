@@ -11,6 +11,16 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 // ----------------------------------------------
 
+// --- CONFIGURAÇÃO DO CORS (PERMITE O VUE.JS ACESSAR A API) ---
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy => policy.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+});
+// -------------------------------------------------------------
+
 builder.Services.AddControllers();
 
 // Configuração do Swagger para .NET 8
@@ -30,6 +40,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+
+app.UseCors("AllowAll");
+
 app.UseAuthorization();
 app.MapControllers();
 
