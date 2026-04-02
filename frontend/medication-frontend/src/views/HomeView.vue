@@ -328,7 +328,7 @@ export default {
 }
 
 .nav-inner {
-  max-width: 1100px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: 20px 32px;
   display: flex;
@@ -448,7 +448,7 @@ export default {
   display: flex;
   align-items: center;
   padding: 120px 32px 80px;
-  max-width: 1100px;
+  max-width: 1550px;
   margin: 0 auto;
   gap: 60px;
 }
@@ -643,7 +643,7 @@ export default {
 }
 
 .proof-inner {
-  max-width: 1100px;
+  max-width: 1500px;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -684,7 +684,7 @@ export default {
 
 /* ─── SECTIONS SHARED ─────────────────────────── */
 .section-inner {
-  max-width: 1100px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: 0 32px;
 }
@@ -1068,7 +1068,7 @@ cite span {
 }
 
 .footer-inner {
-  max-width: 1100px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: 0 32px;
   display: flex;
@@ -1174,4 +1174,26 @@ cite span {
     padding: 0 20px;
   }
 }
+
+@media (max-width: 1200px) {
+  /* Dá um "respiro" nas laterais para não grudar na tela */
+  .section-inner, 
+  .nav-inner, 
+  .hero, 
+  .proof-inner, 
+  .footer-inner {
+    padding: 0 40px; 
+  }
+
+  /* Diminui um pouco o título gigante */
+  .hero h1 {
+    font-size: 3rem;
+  }
+
+  /* Ajusta o grid de benefícios para não ficar espremido */
+  .benefits-grid {
+    gap: 40px;
+  }
+}
+
 </style>
