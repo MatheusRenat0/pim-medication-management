@@ -5,6 +5,12 @@ import InventoryView from '../views/InventoryView.vue'
 const routes = [
   { path: '/', name: 'home', component: HomeView },
   { path: '/estoque', name: 'estoque', component: InventoryView },
+
+  { 
+    path: '/setup-box', 
+    name: 'setup-box', 
+    component: () => import('../views/SetupBoxView.vue') 
+  }
   
 ]
 
