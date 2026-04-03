@@ -9,8 +9,15 @@ const routes = [
   { 
     path: '/setup-box', 
     name: 'setup-box', 
-    component: () => import('../views/SetupBoxView.vue') 
-  }
+    component: () => import('../views/SetupBoxView.vue') },
+
+  { path: '/login', 
+    name: 'login', 
+    component: () => import('../views/LoginView.vue') },
+
+  { path: '/cadastro', 
+    name: 'cadastro', 
+    component: () => import('../views/RegisterView.vue') }
   
 ]
 
