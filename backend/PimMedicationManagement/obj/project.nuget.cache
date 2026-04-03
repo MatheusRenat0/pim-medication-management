@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "MHuzH8Bin8Y=",
+  "dgSpecHash": "IbUVfnKHlIY=",
   "success": true,
-  "projectFilePath": "C:\\Users\\teusr\\Desktop\\PROJETOS\\pim-medication-management\\backend\\PimMedicationManagement\\PimMedicationManagement.csproj",
+  "projectFilePath": "C:\\Projetos\\pim-medication-management\\backend\\PimMedicationManagement\\PimMedicationManagement.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\teusr\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\teusr\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
