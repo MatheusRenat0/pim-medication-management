@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\teusr\\Desktop\\PROJETOS\\pim-medication-management\\backend\\PimMedicationManagement\\PimMedicationManagement.csproj": {}
+    "C:\\Projetos\\pim-medication-management\\backend\\PimMedicationManagement\\PimMedicationManagement.csproj": {}
   },
   "projects": {
-    "C:\\Users\\teusr\\Desktop\\PROJETOS\\pim-medication-management\\backend\\PimMedicationManagement\\PimMedicationManagement.csproj": {
+    "C:\\Projetos\\pim-medication-management\\backend\\PimMedicationManagement\\PimMedicationManagement.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\teusr\\Desktop\\PROJETOS\\pim-medication-management\\backend\\PimMedicationManagement\\PimMedicationManagement.csproj",
+        "projectUniqueName": "C:\\Projetos\\pim-medication-management\\backend\\PimMedicationManagement\\PimMedicationManagement.csproj",
         "projectName": "PimMedicationManagement",
-        "projectPath": "C:\\Users\\teusr\\Desktop\\PROJETOS\\pim-medication-management\\backend\\PimMedicationManagement\\PimMedicationManagement.csproj",
+        "projectPath": "C:\\Projetos\\pim-medication-management\\backend\\PimMedicationManagement\\PimMedicationManagement.csproj",
         "packagesPath": "C:\\Users\\teusr\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\teusr\\Desktop\\PROJETOS\\pim-medication-management\\backend\\PimMedicationManagement\\obj\\",
+        "outputPath": "C:\\Projetos\\pim-medication-management\\backend\\PimMedicationManagement\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\teusr\\AppData\\Roaming\\NuGet\\NuGet.Config"
