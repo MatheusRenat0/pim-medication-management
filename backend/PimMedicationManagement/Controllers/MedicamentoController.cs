@@ -22,7 +22,6 @@ namespace PimMedicationManagement.Controllers
             return await _context.Medicamentos.ToListAsync();
         }
 
-        
         [HttpGet("{id}")]
         public async Task<ActionResult<Medicamento>> GetMedicamento(int id)
         {

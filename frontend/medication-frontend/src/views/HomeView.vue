@@ -4,23 +4,60 @@
     <!-- NAVBAR -->
     <nav class="navbar" :class="{ scrolled: isScrolled }">
       <div class="nav-inner">
-        <div class="logo">
-          <span class="logo-mark">M</span>
+
+        <a class="logo" href="#">
+          <div class="logo-icon">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <path d="M9 3v12M3 9h12" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+            </svg>
+          </div>
           <span class="logo-text">MedFlow</span>
-        </div>
+        </a>
+
         <div class="nav-links">
-          <a href="#como-funciona" @click.prevent="scrollTo('como-funciona')">Como funciona</a>
-          <a href="#planos" @click.prevent="scrollTo('planos')">Planos</a>
-          <button @click="$router.push('/setup-box')" class="btn-nav">Começar agora</button>
+          <a
+            href="#como-funciona"
+            class="nav-link"
+            :class="{ active: activeSection === 'como-funciona' }"
+            @click.prevent="scrollTo('como-funciona')"
+          >Como funciona</a>
+          <a
+            href="#planos"
+            class="nav-link"
+            :class="{ active: activeSection === 'planos' }"
+            @click.prevent="scrollTo('planos')"
+          >Planos</a>
+          <a href="#" class="nav-link">Para famílias</a>
         </div>
+
+        <div class="nav-actions">
+          <button class="btn-ghost">Entrar</button>
+          <div class="nav-divider"></div>
+          <button @click="$router.push('/setup-box')" class="btn-cta">
+            Montar minha box
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2.5 7h9M8 3.5l3.5 3.5L8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
         <button class="hamburger" @click="menuOpen = !menuOpen" :class="{ active: menuOpen }">
           <span></span><span></span>
         </button>
       </div>
+
       <div class="mobile-menu" :class="{ open: menuOpen }">
-        <a href="#como-funciona" @click="menuOpen = false; scrollTo('como-funciona')">Como funciona</a>
-        <a href="#planos" @click="menuOpen = false; scrollTo('planos')">Planos</a>
-        <button @click="$router.push('/setup-box')" class="btn-nav">Começar agora</button>
+        <a href="#como-funciona" @click="menuOpen = false; scrollTo('como-funciona')" class="mobile-link">Como funciona</a>
+        <a href="#planos" @click="menuOpen = false; scrollTo('planos')" class="mobile-link">Planos</a>
+        <a href="#" class="mobile-link">Para famílias</a>
+        <div class="mobile-divider"></div>
+        <button class="btn-ghost-mobile">Entrar</button>
+        <button @click="$router.push('/setup-box')" class="btn-cta mobile-cta">
+          Montar minha box
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2.5 7h9M8 3.5l3.5 3.5L8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
       </div>
     </nav>
 
@@ -127,7 +164,7 @@
           <p>"Minha mãe tem 73 anos e tomava seis remédios diferentes. Era um caos. Desde que começamos com o MedFlow,
             ela mesma consegue se organizar. Isso vale muito."</p>
           <cite>
-            <div class="cite-avatar" style="background: #d4e8d4">R</div>
+            <div class="cite-avatar" style="background: #dbeafe">R</div>
             <div>
               <strong>Renata M.</strong>
               <span>São Paulo, SP</span>
@@ -155,7 +192,7 @@
             <ul>
               <li v-for="(item, j) in plan.items" :key="j">
                 <svg width="16" height="16" viewBox="0 0 16 16">
-                  <path d="M3 8l3.5 3.5L13 5" stroke="#4a9b6f" stroke-width="1.5" stroke-linecap="round"
+                  <path d="M3 8l3.5 3.5L13 5" stroke="#2563eb" stroke-width="1.5" stroke-linecap="round"
                     stroke-linejoin="round" fill="none" />
                 </svg>
                 {{ item }}
@@ -211,16 +248,17 @@ export default {
     return {
       isScrolled: false,
       menuOpen: false,
-      avatarColors: ['#d4e8d4', '#e8d4d4', '#d4d8e8', '#e8e4d4', '#d4e8e4'],
+      activeSection: '',
+      avatarColors: ['#dbeafe', '#fce7f3', '#dbeafe', '#fef9c3', '#dbeafe'],
       avatarLetters: ['A', 'L', 'M', 'P', 'C'],
       mockDays: [
-        { label: 'Seg', sachets: [{ time: '07h', color: '#bbf7d0' }, { time: '22h', color: '#e9d5ff' }] },
-        { label: 'Ter', sachets: [{ time: '07h', color: '#bbf7d0' }, { time: '14h', color: '#fde68a' }, { time: '22h', color: '#e9d5ff' }] },
-        { label: 'Qua', sachets: [{ time: '07h', color: '#bbf7d0' }, { time: '22h', color: '#e9d5ff' }] },
-        { label: 'Qui', sachets: [{ time: '07h', color: '#bbf7d0' }, { time: '22h', color: '#e9d5ff' }] },
-        { label: 'Sex', sachets: [{ time: '07h', color: '#bbf7d0' }, { time: '14h', color: '#fde68a' }, { time: '22h', color: '#e9d5ff' }] },
-        { label: 'Sáb', sachets: [{ time: '07h', color: '#bbf7d0' }, { time: '22h', color: '#e9d5ff' }] },
-        { label: 'Dom', sachets: [{ time: '07h', color: '#bbf7d0' }] },
+        { label: 'Seg', sachets: [{ time: '07h', color: '#bfdbfe' }, { time: '22h', color: '#e9d5ff' }] },
+        { label: 'Ter', sachets: [{ time: '07h', color: '#bfdbfe' }, { time: '14h', color: '#fde68a' }, { time: '22h', color: '#e9d5ff' }] },
+        { label: 'Qua', sachets: [{ time: '07h', color: '#bfdbfe' }, { time: '22h', color: '#e9d5ff' }] },
+        { label: 'Qui', sachets: [{ time: '07h', color: '#bfdbfe' }, { time: '22h', color: '#e9d5ff' }] },
+        { label: 'Sex', sachets: [{ time: '07h', color: '#bfdbfe' }, { time: '14h', color: '#fde68a' }, { time: '22h', color: '#e9d5ff' }] },
+        { label: 'Sáb', sachets: [{ time: '07h', color: '#bfdbfe' }, { time: '22h', color: '#e9d5ff' }] },
+        { label: 'Dom', sachets: [{ time: '07h', color: '#bfdbfe' }] },
       ],
       steps: [
         { title: 'Você nos conta seus medicamentos', desc: 'Informe os remédios, doses e horários. Nosso farmacêutico revisa tudo antes de montar.' },
@@ -260,9 +298,22 @@ export default {
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll);
+    this.observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) this.activeSection = entry.target.id;
+        });
+      },
+      { threshold: 0.3 }
+    );
+    ['como-funciona', 'planos'].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) this.observer.observe(el);
+    });
   },
   beforeUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
+    if (this.observer) this.observer.disconnect();
   },
   methods: {
     handleScroll() {
@@ -278,13 +329,12 @@ export default {
 
 <style scoped>
 /* ─── TOKENS ─────────────────────────────────── */
-/* Usando .landing como escopo para evitar conflito com CSS externo */
 .landing {
-  --green: #166534;
-  --green-hover: #14532d;
-  --green-light: #22c55e;
-  --green-pale: #f0fdf4;
-  --green-pale-border: #86efac;
+  --blue: #1d4ed8;
+  --blue-hover: #1e40af;
+  --blue-light: #3b82f6;
+  --blue-pale: #eff6ff;
+  --blue-pale-border: #bfdbfe;
   --text: #0a0a0a;
   --text-secondary: #1f2937;
   --muted: #374151;
@@ -318,82 +368,145 @@ export default {
   left: 0;
   right: 0;
   z-index: 100;
-  transition: background var(--transition), box-shadow var(--transition);
-}
-
-.navbar.scrolled {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 1px 0 var(--border);
+  transition: background var(--transition), box-shadow var(--transition), border-color var(--transition);
 }
 
 .nav-inner {
   max-width: 1500px;
   margin: 0 auto;
-  padding: 20px 32px;
+  padding: 12px 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
+}
+
+.navbar.scrolled .nav-inner {
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .logo {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   text-decoration: none;
+  flex-shrink: 0;
+  margin-right: 8px;
 }
 
-.logo-mark {
-  width: 32px;
-  height: 32px;
-  background: var(--green);
-  color: white;
-  border-radius: 8px;
+.logo-icon {
+  width: 34px;
+  height: 34px;
+  background: #1d4ed8;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 16px;
+  flex-shrink: 0;
 }
 
 .logo-text {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text);
+  font-size: 17px;
+  font-weight: 700;
+  color: #0a0a0a;
+  letter-spacing: -0.3px;
+}
+
+.logo-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  border-radius: 100px;
+  padding: 2px 8px;
 }
 
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: 2px;
+  flex: 1;
+  justify-content: center;
 }
 
-.nav-links a {
-  color: var(--text-secondary);
-  text-decoration: none;
-  font-size: 15px;
+.nav-link {
+  font-size: 14px;
   font-weight: 500;
-  transition: color var(--transition);
+  color: #374151;
+  text-decoration: none;
+  padding: 7px 14px;
+  border-radius: 8px;
+  transition: background 0.15s, color 0.15s;
+  cursor: pointer;
 }
 
-.nav-links a:hover {
-  color: var(--text);
+.nav-link:hover {
+  background: #f1f5f9;
+  color: #0a0a0a;
 }
 
-.btn-nav {
-  background: #166534;
-  color: #ffffff;
+.nav-link.active {
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.btn-ghost {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  background: none;
   border: none;
-  padding: 10px 20px;
-  border-radius: 100px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn-ghost:hover {
+  background: #f1f5f9;
+  color: #0a0a0a;
+}
+
+.nav-divider {
+  width: 1px;
+  height: 20px;
+  background: #e2e8f0;
+}
+
+.btn-cta {
   font-size: 14px;
   font-weight: 600;
+  color: #fff;
+  background: #1d4ed8;
+  border: none;
+  padding: 9px 18px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.15s, transform 0.15s;
+  letter-spacing: -0.1px;
+  white-space: nowrap;
 }
 
-.btn-nav:hover {
-  background: #14532d;
+.btn-cta:hover {
+  background: #1e40af;
+  transform: translateY(-1px);
 }
 
 .hamburger {
@@ -403,14 +516,15 @@ export default {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px;
+  padding: 6px;
+  margin-left: auto;
 }
 
 .hamburger span {
   display: block;
   width: 22px;
   height: 2px;
-  background: var(--text);
+  background: #0a0a0a;
   border-radius: 2px;
   transition: transform 0.2s;
 }
@@ -426,20 +540,64 @@ export default {
 .mobile-menu {
   display: none;
   flex-direction: column;
-  padding: 16px 32px 24px;
-  gap: 16px;
-  background: white;
-  border-top: 1px solid var(--border);
+  padding: 8px 16px 20px;
+  gap: 2px;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
 }
 
 .mobile-menu.open {
   display: flex;
 }
 
-.mobile-menu a {
-  color: var(--muted);
+.mobile-link {
+  font-size: 15px;
+  font-weight: 500;
+  color: #374151;
   text-decoration: none;
-  font-size: 16px;
+  padding: 11px 14px;
+  border-radius: 8px;
+  transition: background 0.15s;
+  display: block;
+}
+
+.mobile-link:hover {
+  background: #f1f5f9;
+  color: #0a0a0a;
+}
+
+.mobile-divider {
+  height: 1px;
+  background: #e2e8f0;
+  margin: 8px 0;
+}
+
+.btn-ghost-mobile {
+  font-size: 15px;
+  font-weight: 500;
+  color: #374151;
+  background: none;
+  border: none;
+  padding: 11px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: background 0.15s;
+}
+
+.btn-ghost-mobile:hover {
+  background: #f1f5f9;
+}
+
+.mobile-cta {
+  margin-top: 6px;
+  justify-content: center;
+  width: 100%;
+  padding: 13px 18px;
+  border-radius: 10px;
+  font-size: 15px;
 }
 
 /* ─── HERO ────────────────────────────────────── */
@@ -467,13 +625,13 @@ export default {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: var(--green-pale);
-  color: var(--green);
+  background: var(--blue-pale);
+  color: var(--blue);
   font-size: 13px;
   font-weight: 600;
   padding: 6px 14px;
   border-radius: 100px;
-  border: 1px solid var(--green-pale-border);
+  border: 1px solid var(--blue-pale-border);
   margin-bottom: 28px;
 }
 
@@ -489,7 +647,7 @@ export default {
 
 .hero h1 em {
   font-style: italic;
-  color: #166534;
+  color: #1d4ed8;
 }
 
 .hero-sub {
@@ -512,7 +670,7 @@ export default {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: #166534;
+  background: #1d4ed8;
   color: #ffffff;
   border: none;
   padding: 14px 24px;
@@ -524,7 +682,7 @@ export default {
 }
 
 .btn-primary:hover {
-  background: #14532d;
+  background: #1e40af;
   transform: translateY(-1px);
 }
 
@@ -551,9 +709,9 @@ export default {
 }
 
 .btn-outline:hover {
-  border-color: #166534;
-  color: #166534;
-  background: #f0fdf4;
+  border-color: #1d4ed8;
+  color: #1d4ed8;
+  background: #eff6ff;
 }
 
 .link-secondary {
@@ -567,8 +725,8 @@ export default {
 }
 
 .link-secondary:hover {
-  color: var(--green);
-  text-decoration-color: var(--green);
+  color: var(--blue);
+  text-decoration-color: var(--blue);
 }
 
 .hero-note {
@@ -694,7 +852,7 @@ export default {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #166534;
+  color: #1d4ed8;
   margin-bottom: 16px;
 }
 
@@ -711,9 +869,9 @@ section h2 {
 /* ─── HOW IT WORKS ────────────────────────────── */
 .how {
   padding: 100px 0;
-  background: #f0fdf4;
-  border-top: 2px solid #bbf7d0;
-  border-bottom: 2px solid #bbf7d0;
+  background: #eff6ff;
+  border-top: 2px solid #bfdbfe;
+  border-bottom: 2px solid #bfdbfe;
 }
 
 .how h2 {
@@ -751,12 +909,12 @@ section h2 {
 .step-number {
   font-size: 13px;
   font-weight: 700;
-  color: var(--green);
+  color: var(--blue);
   width: 40px;
   height: 40px;
   border-radius: 50%;
   background: white;
-  border: 2px solid var(--green);
+  border: 2px solid var(--blue);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -811,15 +969,10 @@ section h2 {
   transition: box-shadow var(--transition), transform var(--transition);
 }
 
-.benefit-card:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
-}
-
 .benefit-icon {
   font-size: 20px;
   margin-bottom: 12px;
-  color: var(--green);
+  color: var(--blue);
 }
 
 .benefit-card h4 {
@@ -838,9 +991,9 @@ section h2 {
 /* ─── TESTIMONIAL ─────────────────────────────── */
 .testimonial {
   padding: 80px 0;
-  background: #f0fdf4;
-  border-top: 2px solid #bbf7d0;
-  border-bottom: 2px solid #bbf7d0;
+  background: #eff6ff;
+  border-top: 2px solid #bfdbfe;
+  border-bottom: 2px solid #bfdbfe;
 }
 
 blockquote {
@@ -876,7 +1029,7 @@ cite {
   font-size: 15px;
   font-weight: 700;
   color: #1f2937;
-  border: 2px solid var(--green-pale-border);
+  border: 2px solid #bfdbfe;
 }
 
 cite strong {
@@ -903,10 +1056,10 @@ cite span {
 }
 
 .pricing .section-label {
-  color: #166534 !important;
+  color: #1d4ed8 !important;
 }
 
-.pricing>.section-inner>p {
+.pricing > .section-inner > p {
   color: #1f2937;
   margin-bottom: 48px;
 }
@@ -933,8 +1086,8 @@ cite span {
 }
 
 .plan.featured {
-  border: 2px solid #166534;
-  background: #f0fdf4;
+  border: 2px solid #1d4ed8;
+  background: #eff6ff;
 }
 
 .plan-tag {
@@ -942,7 +1095,7 @@ cite span {
   top: -13px;
   left: 50%;
   transform: translateX(-50%);
-  background: #166534;
+  background: #1d4ed8;
   color: #ffffff;
   font-size: 11px;
   font-weight: 700;
@@ -999,7 +1152,7 @@ cite span {
 }
 
 .plan.featured .plan-desc {
-  border-bottom-color: #bbf7d0;
+  border-bottom-color: #bfdbfe;
 }
 
 .plan ul {
@@ -1028,7 +1181,7 @@ cite span {
 .final-cta {
   padding: 120px 0;
   text-align: center;
-  background: #0f1a14;
+  background: #0f172a;
   color: #ffffff;
 }
 
@@ -1038,26 +1191,26 @@ cite span {
   margin-bottom: 16px;
 }
 
-.final-cta>.section-inner>p {
+.final-cta > .section-inner > p {
   font-size: 17px;
-  color: #86efac;
+  color: #93c5fd;
   margin-bottom: 40px;
   font-weight: 500;
 }
 
 .final-cta .btn-primary {
   background: #ffffff;
-  color: #0f1a14;
+  color: #0f172a;
 }
 
 .final-cta .btn-primary:hover {
-  background: #f0fdf4;
+  background: #eff6ff;
 }
 
 .final-note {
   margin-top: 20px;
   font-size: 13px;
-  color: #4ade80;
+  color: #60a5fa;
   font-weight: 500;
 }
 
@@ -1102,11 +1255,44 @@ cite span {
 }
 
 /* ─── RESPONSIVE ──────────────────────────────── */
+@media (max-width: 1200px) {
+  .section-inner,
+  .proof-inner,
+  .footer-inner {
+    padding: 0 40px;
+  }
+
+  .hero {
+    padding: 120px 40px 80px;
+  }
+
+  .hero h1 {
+    font-size: 3rem;
+  }
+
+  .benefits-grid {
+    gap: 40px;
+  }
+}
+
 @media (max-width: 900px) {
+  .nav-links {
+    display: none;
+  }
+
+  .nav-actions {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
   .hero {
     flex-direction: column;
-    padding: 100px 24px 60px;
+    padding: 90px 20px 60px;
     text-align: center;
+    gap: 40px;
   }
 
   .hero-actions {
@@ -1128,16 +1314,8 @@ cite span {
 
   .plans {
     grid-template-columns: 1fr;
-    max-width: 400px;
+    max-width: 440px;
     margin: 0 auto;
-  }
-
-  .nav-links {
-    display: none;
-  }
-
-  .hamburger {
-    display: flex;
   }
 
   .proof-inner {
@@ -1153,47 +1331,49 @@ cite span {
   .footer-links {
     justify-content: center;
   }
-}
-
-@media (max-width: 600px) {
-  .benefit-cards {
-    grid-template-columns: 1fr;
-  }
-
-  section h2 {
-    font-size: 1.8rem;
-  }
-
-  .how,
-  .benefits,
-  .pricing {
-    padding: 72px 0;
-  }
 
   .section-inner {
     padding: 0 20px;
   }
 }
 
-@media (max-width: 1200px) {
-  /* Dá um "respiro" nas laterais para não grudar na tela */
-  .section-inner, 
-  .nav-inner, 
-  .hero, 
-  .proof-inner, 
-  .footer-inner {
-    padding: 0 40px; 
+@media (max-width: 600px) {
+  .nav-inner {
+    padding: 10px 16px;
   }
 
-  /* Diminui um pouco o título gigante */
+  .logo-badge {
+    display: none;
+  }
+
+  .benefit-cards {
+    grid-template-columns: 1fr;
+  }
+
+  section h2 {
+    font-size: 1.7rem;
+  }
+
+  .how,
+  .benefits,
+  .pricing {
+    padding: 64px 0;
+  }
+
+  .final-cta {
+    padding: 80px 0;
+  }
+
   .hero h1 {
-    font-size: 3rem;
+    font-size: 2.1rem;
   }
 
-  /* Ajusta o grid de benefícios para não ficar espremido */
-  .benefits-grid {
-    gap: 40px;
+  .hero-sub {
+    font-size: 15px;
+  }
+
+  .amount {
+    font-size: 44px;
   }
 }
-
 </style>
