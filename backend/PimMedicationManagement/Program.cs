@@ -21,7 +21,11 @@ builder.Services.AddCors(options =>
 });
 // -------------------------------------------------------------
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
 
 // Configuração do Swagger para .NET 8
 builder.Services.AddEndpointsApiExplorer();

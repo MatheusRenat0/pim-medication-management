@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PimMedicationManagement.Data;
 using PimMedicationManagement.Models;
-using PimMedicationManagement.DTOs; // Importando a sua pasta de DTOs
+using PimMedicationManagement.DTOs;
 
 namespace PimMedicationManagement.Controllers
 {
@@ -16,6 +16,8 @@ namespace PimMedicationManagement.Controllers
         {
             _context = context;
         }
+
+        // ── Endpoints existentes (preservados) ──
 
         [HttpPost("cadastrar")]
         public async Task<IActionResult> Cadastrar([FromBody] UsuarioCadastroDTO dto)
@@ -31,7 +33,7 @@ namespace PimMedicationManagement.Controllers
                 Nome = dto.Nome,
                 Email = dto.Email,
                 Cpf = dto.Cpf,
-                SenhaHash = dto.Senha, // No futuro, aqui entra a criptografia
+                SenhaHash = dto.Senha,
                 Tipo = "Paciente",
                 DataCadastro = DateTime.Now
             };
@@ -39,7 +41,7 @@ namespace PimMedicationManagement.Controllers
             _context.Usuarios.Add(novoUsuario);
             await _context.SaveChangesAsync();
 
-            return Ok(new { mensagem = "Cadastro realizado com sucesso!", usuarioId = novoUsuario.Id });
+            return Ok(new { mensagem = "Cadastro realizado com sucesso!", usuarioId = novoUsuario.Id, nome = novoUsuario.Nome, tipo = novoUsuario.Tipo });
         }
 
         [HttpPost("login")]
@@ -56,8 +58,49 @@ namespace PimMedicationManagement.Controllers
             return Ok(new {
                 mensagem = "Login aprovado!",
                 usuarioId = usuario.Id,
-                nome = usuario.Nome
+                nome = usuario.Nome,
+                tipo = usuario.Tipo
             });
+        }
+
+        // ── Novos endpoints CRUD ──
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
+        {
+            return await _context.Usuarios.ToListAsync();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Usuario>> GetUsuario(int id)
+        {
+            var usuario = await _context.Usuarios.FindAsync(id);
+            if (usuario == null) return NotFound();
+            return usuario;
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutUsuario(int id, Usuario usuario)
+        {
+            if (id != usuario.Id) return BadRequest();
+            _context.Entry(usuario).State = EntityState.Modified;
+            try { await _context.SaveChangesAsync(); }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Usuarios.Any(u => u.Id == id)) return NotFound();
+                throw;
+            }
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUsuario(int id)
+        {
+            var usuario = await _context.Usuarios.FindAsync(id);
+            if (usuario == null) return NotFound();
+            _context.Usuarios.Remove(usuario);
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
     }
 }
