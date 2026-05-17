@@ -1,23 +1,18 @@
 <template>
-  <router-view />
+  <component :is="layout">
+    <router-view />
+  </component>
 </template>
 
-<style>
-/* Reset forçado para o app inteiro */
-html, body {
-  margin: 0 !important;
-  padding: 0 !important;
-  width: 100% !important;
-  overflow-x: hidden !important;
-  background-color: #ffffff !important;
-}
+<script setup>
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import AppLayout from './components/layout/AppLayout.vue'
 
-#app {
-  max-width: 100% !important;
-  width: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: none !important;
-  display: block !important;
-}
+const route = useRoute()
+const layout = computed(() => route.meta.public ? 'div' : AppLayout)
+</script>
+
+<style>
+@import './assets/styles/global.css';
 </style>
