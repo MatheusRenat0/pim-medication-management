@@ -18,6 +18,7 @@ namespace PimMedicationManagement.Controllers
         }
 
         // POST: api/Tratamento (Cria a Box Completa)
+        // RF10 – A criação de um tratamento realiza a baixa automática no estoque
         [HttpPost]
         public async Task<IActionResult> PostTratamento(TratamentoCreateDto dto)
         {
@@ -42,6 +43,30 @@ namespace PimMedicationManagement.Controllers
             }
 
             _context.Tratamentos.Add(novoTratamento);
+            await _context.SaveChangesAsync();
+
+            // 3. RF10 – Baixa automática no estoque para cada sachê do tratamento
+            foreach (var s in dto.Saches)
+            {
+                var estoque = await _context.Estoques
+                    .FirstOrDefaultAsync(e => e.MedicamentoId == s.MedicamentoId);
+
+                if (estoque != null && estoque.QuantidadeDisponivel >= s.QuantidadeComprimidos)
+                {
+                    estoque.QuantidadeDisponivel -= s.QuantidadeComprimidos;
+
+                    // RF07 – Registra a movimentação de saída no histórico
+                    _context.MovimentacoesEstoque.Add(new MovimentacaoEstoque
+                    {
+                        MedicamentoId = s.MedicamentoId,
+                        Tipo = "Saida",
+                        Quantidade = s.QuantidadeComprimidos,
+                        DataMovimentacao = DateTime.Now,
+                        Observacao = $"Tratamento #{novoTratamento.Id} - Baixa automática"
+                    });
+                }
+            }
+
             await _context.SaveChangesAsync();
 
             return Ok(new { message = "Box MedFlow configurada com sucesso!", tratamentoId = novoTratamento.Id });
