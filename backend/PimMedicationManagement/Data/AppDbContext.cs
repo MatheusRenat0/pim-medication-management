@@ -17,5 +17,6 @@ namespace PimMedicationManagement.Data
         public DbSet<Receita> Receitas { get; set; }
         public DbSet<Tratamento> Tratamentos { get; set; }
         public DbSet<Sache> Saches { get; set; }
+        public DbSet<MovimentacaoEstoque> MovimentacoesEstoque { get; set; }
     }
 }

@@ -317,6 +317,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { useApi } from '../composables/useApi'
 
 // ── SCROLL ────────────────────────────────────
 const isScrolled = ref(false)
@@ -411,6 +412,8 @@ const ativarConcierge = () => {
 }
 
 // ── SALVAR ────────────────────────────────────
+const { get, post } = useApi()
+
 const salvarBox = async () => {
   const payload = {
     usuarioId: 1,
@@ -422,26 +425,17 @@ const salvarBox = async () => {
     }))
   }
   try {
-    const res = await fetch('http://localhost:5205/api/Tratamento', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-    if (res.ok) {
-      alert('Sua Box MedFlow foi configurada!')
-      sachesSelecionados.value = []
-    } else {
-      alert('Erro ao salvar a Box.')
-    }
+    await post('/Tratamento', payload)
+    alert('Sua Box MedFlow foi configurada!')
+    sachesSelecionados.value = []
   } catch {
-    alert('Erro de conexão com o servidor.')
+    alert('Erro ao salvar a Box.')
   }
 }
 
 onMounted(async () => {
   try {
-    const res = await fetch('http://localhost:5205/api/Medicamento')
-    if (res.ok) medicamentosApi.value = await res.json()
+    medicamentosApi.value = await get('/Medicamento')
   } catch { /* usa dados mockados */ }
 })
 </script>

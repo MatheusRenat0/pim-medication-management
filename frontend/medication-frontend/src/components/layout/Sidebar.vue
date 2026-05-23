@@ -2,8 +2,8 @@
   <aside class="sidebar" :class="{ collapsed }">
     <div class="sidebar-header">
       <div class="logo" @click="$router.push('/dashboard')">
-        <div class="logo-icon">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3v12M3 9h12" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg>
+      <div class="logo-icon">
+          <img src="/logo.png" alt="MedFlow" style="width:28px;height:28px;object-fit:contain;" />
         </div>
         <span v-if="!collapsed" class="logo-text">MedFlow</span>
       </div>

@@ -7,9 +7,7 @@
 
         <a class="logo" href="#">
           <div class="logo-icon">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-              <path d="M9 3v12M3 9h12" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
-            </svg>
+            <img src="/logo.png" alt="MedFlow" style="width:28px;height:28px;object-fit:contain;" />
           </div>
           <span class="logo-text">MedFlow</span>
         </a>
@@ -27,11 +25,16 @@
             :class="{ active: activeSection === 'planos' }"
             @click.prevent="scrollTo('planos')"
           >Planos</a>
-          <a href="#" class="nav-link">Para famílias</a>
+          <a
+            href="#familias"
+            class="nav-link"
+            :class="{ active: activeSection === 'familias' }"
+            @click.prevent="scrollTo('familias')"
+          >Para famílias</a>
         </div>
 
         <div class="nav-actions">
-          <button class="btn-ghost">Entrar</button>
+          <button class="btn-ghost" @click="$router.push('/login')">Entrar</button>
           <div class="nav-divider"></div>
           <button @click="$router.push('/setup-box')" class="btn-cta">
             Montar minha box
@@ -49,9 +52,9 @@
       <div class="mobile-menu" :class="{ open: menuOpen }">
         <a href="#como-funciona" @click="menuOpen = false; scrollTo('como-funciona')" class="mobile-link">Como funciona</a>
         <a href="#planos" @click="menuOpen = false; scrollTo('planos')" class="mobile-link">Planos</a>
-        <a href="#" class="mobile-link">Para famílias</a>
+        <a href="#familias" @click="menuOpen = false; scrollTo('familias')" class="mobile-link">Para famílias</a>
         <div class="mobile-divider"></div>
-        <button class="btn-ghost-mobile">Entrar</button>
+        <button class="btn-ghost-mobile" @click="$router.push('/login')">Entrar</button>
         <button @click="$router.push('/setup-box')" class="btn-cta mobile-cta">
           Montar minha box
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -206,6 +209,67 @@
       </div>
     </section>
 
+    <!-- PARA FAMÍLIAS -->
+    <section class="families" id="familias">
+      <div class="section-inner">
+        <div class="families-grid">
+          <div class="families-text">
+            <div class="section-label">Para famílias</div>
+            <h2>Cuide de quem<br>você <em>ama.</em></h2>
+            <p class="families-desc">
+              Gerencie a medicação de toda a família em uma única conta.
+              Cada pessoa recebe seus próprios sachês organizados por horário,
+              sem confusão entre remédios.
+            </p>
+            <div class="families-features">
+              <div class="family-feature">
+                <div class="ff-icon">👨‍👩‍👧</div>
+                <div>
+                  <strong>Até 4 pessoas por plano</strong>
+                  <p>Adicione pais, avós ou filhos. Cada um com sua rotina personalizada.</p>
+                </div>
+              </div>
+              <div class="family-feature">
+                <div class="ff-icon">📋</div>
+                <div>
+                  <strong>Controle centralizado</strong>
+                  <p>Veja todos os tratamentos em um único painel. Receba alertas de cada membro.</p>
+                </div>
+              </div>
+              <div class="family-feature">
+                <div class="ff-icon">🚚</div>
+                <div>
+                  <strong>Uma entrega, toda a família</strong>
+                  <p>Todas as boxes chegam juntas, reduzindo custo de frete e simplificando a logística.</p>
+                </div>
+              </div>
+            </div>
+            <button @click="$router.push('/setup-box')" class="btn-primary">
+              Montar box da família
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
+          <div class="families-visual">
+            <div class="family-card">
+              <div class="fc-header"><div class="fc-avatar" style="background:#bfdbfe">M</div><div><strong>Maria, 73 anos</strong><span>6 medicamentos · 3x ao dia</span></div></div>
+              <div class="fc-sachets"><span class="fc-sachet" style="background:#bfdbfe">07h</span><span class="fc-sachet" style="background:#fde68a">13h</span><span class="fc-sachet" style="background:#e9d5ff">21h</span></div>
+            </div>
+            <div class="family-card">
+              <div class="fc-header"><div class="fc-avatar" style="background:#fce7f3">J</div><div><strong>José, 76 anos</strong><span>4 medicamentos · 2x ao dia</span></div></div>
+              <div class="fc-sachets"><span class="fc-sachet" style="background:#bfdbfe">08h</span><span class="fc-sachet" style="background:#e9d5ff">20h</span></div>
+            </div>
+            <div class="family-card">
+              <div class="fc-header"><div class="fc-avatar" style="background:#d9f99d">A</div><div><strong>Ana, 45 anos</strong><span>2 medicamentos · 1x ao dia</span></div></div>
+              <div class="fc-sachets"><span class="fc-sachet" style="background:#bfdbfe">07h</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- CTA FINAL -->
     <section class="final-cta">
       <div class="section-inner">
@@ -226,14 +290,14 @@
     <footer class="footer">
       <div class="footer-inner">
         <div class="logo">
-          <span class="logo-mark">M</span>
+          <img src="/logo.png" alt="MedFlow" style="width:32px;height:32px;object-fit:contain;" />
           <span class="logo-text">MedFlow</span>
         </div>
         <p>Feito com cuidado para quem cuida da saúde.</p>
         <div class="footer-links">
-          <a href="#">Termos de uso</a>
-          <a href="#">Privacidade</a>
-          <a href="#">Contato</a>
+          <a href="#" @click.prevent="$router.push('/termos')">Termos de uso</a>
+          <a href="#" @click.prevent="$router.push('/privacidade')">Privacidade</a>
+          <a href="#" @click.prevent="$router.push('/contato')">Contato</a>
         </div>
       </div>
     </footer>
@@ -306,7 +370,7 @@ export default {
       },
       { threshold: 0.3 }
     );
-    ['como-funciona', 'planos'].forEach((id) => {
+    ['como-funciona', 'planos', 'familias'].forEach((id) => {
       const el = document.getElementById(id);
       if (el) this.observer.observe(el);
     });
@@ -1374,6 +1438,148 @@ cite span {
 
   .amount {
     font-size: 44px;
+  }
+}
+
+/* ─── PARA FAMÍLIAS ───────────────────────────── */
+.families {
+  padding: 100px 0;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.families h2 {
+  font-family: 'Georgia', serif;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #0a0a0a;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.families h2 em {
+  font-style: italic;
+  color: #1d4ed8;
+}
+
+.families-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.families-desc {
+  font-size: 16px;
+  color: #374151;
+  line-height: 1.7;
+  margin-bottom: 32px;
+}
+
+.families-features {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 36px;
+}
+
+.family-feature {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.ff-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.family-feature strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0a0a0a;
+  margin-bottom: 4px;
+}
+
+.family-feature p {
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.families-visual {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.family-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.family-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+.fc-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.fc-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  color: #1e3a8a;
+  flex-shrink: 0;
+}
+
+.fc-header strong {
+  display: block;
+  font-size: 14px;
+  color: #0a0a0a;
+}
+
+.fc-header span {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.fc-sachets {
+  display: flex;
+  gap: 8px;
+}
+
+.fc-sachet {
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0a0a0a;
+  border: 1px solid rgba(0,0,0,0.08);
+}
+
+@media (max-width: 900px) {
+  .families-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
   }
 }
 </style>

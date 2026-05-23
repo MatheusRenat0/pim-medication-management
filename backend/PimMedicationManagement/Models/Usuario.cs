@@ -10,7 +10,7 @@ namespace PimMedicationManagement.Models
         
         public string SenhaHash { get; set; } = string.Empty;
         
-        // 👇 Adicione as três propriedades que estavam faltando:
+        // Propriedades adicionais do usuário
         public string Cpf { get; set; } = string.Empty;
         
         public string Tipo { get; set; } = string.Empty;

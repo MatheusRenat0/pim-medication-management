@@ -148,7 +148,8 @@ Este projeto integra conhecimentos de diversas áreas como:
 - Desenvolvimento Web  
 - UX/UI  
 - Análise de Dados  
-
+- teste pr
+1
 Demonstrando, na prática, a aplicação de conceitos acadêmicos em um cenário realista de mercado.
 
 ---

@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <aside class="panel-left">
-      <div class="logo"><span class="logo-mark">M</span><span class="logo-name">MedFlow</span></div>
+      <div class="logo"><img src="/logo.png" alt="MedFlow" class="logo-mark-img" /><span class="logo-name">MedFlow</span></div>
       <div class="panel-body">
         <h1 class="headline">Sua saúde,<br><em>organizada</em><br>pra você.</h1>
         <p class="tagline">Medicamentos separados por dia e horário,<br>entregues direto na sua porta todo mês.</p>
@@ -54,7 +54,7 @@ const fazerLogin = async () => {
 .page{display:grid;grid-template-columns:1fr 1fr;min-height:100vh;font-family:'Inter','DM Sans',sans-serif;color:#0a0a0a;background:#fff}
 .panel-left{background:#1E3A8A;display:flex;flex-direction:column;padding:44px 48px;min-height:100vh}
 .logo{display:flex;align-items:center;gap:10px;margin-bottom:52px}
-.logo-mark{width:34px;height:34px;background:#2563EB;color:#fff;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:17px}
+.logo-mark-img{width:38px;height:38px;border-radius:9px;object-fit:contain}
 .logo-name{font-size:18px;font-weight:600;color:#fff;letter-spacing:-0.3px}
 .panel-body{flex:1}
 .headline{font-family:Georgia,serif;font-size:clamp(1.8rem,2.4vw,2.6rem);line-height:1.15;color:#fff;font-weight:700;letter-spacing:-0.03em;margin-bottom:16px}

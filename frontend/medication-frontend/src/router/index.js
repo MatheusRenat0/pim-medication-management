@@ -15,6 +15,10 @@ const routes = [
   { path: '/pedidos', name: 'pedidos', component: () => import('../views/pedidos/PedidosView.vue'), meta: { title: 'Pedidos', requiresAuth: true } },
   { path: '/entregas', name: 'entregas', component: () => import('../views/entregas/EntregasView.vue'), meta: { title: 'Entregas', requiresAuth: true } },
   { path: '/relatorios', name: 'relatorios', component: () => import('../views/relatorios/RelatoriosView.vue'), meta: { title: 'Relatórios', requiresAuth: true, roles: ['Administrador', 'Funcionario'] } },
+  { path: '/setup-box', name: 'setup-box', component: () => import('../views/SetupBoxView.vue'), meta: { public: true } },
+  { path: '/termos', name: 'termos', component: () => import('../views/TermosView.vue'), meta: { public: true } },
+  { path: '/privacidade', name: 'privacidade', component: () => import('../views/PrivacidadeView.vue'), meta: { public: true } },
+  { path: '/contato', name: 'contato', component: () => import('../views/ContatoView.vue'), meta: { public: true } },
   { path: '/:pathMatch(.*)*', redirect: '/' }
 ]
 

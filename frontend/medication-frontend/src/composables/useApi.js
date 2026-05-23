@@ -5,6 +5,18 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' }
 })
 
+// RF03 – Envia o ID do usuário logado em toda requisição para o backend verificar o perfil
+api.interceptors.request.use((config) => {
+  const userData = localStorage.getItem('medflow_user')
+  if (userData) {
+    const user = JSON.parse(userData)
+    if (user?.usuarioId) {
+      config.headers['X-User-Id'] = user.usuarioId
+    }
+  }
+  return config
+})
+
 api.interceptors.response.use(
   response => response,
   error => {
