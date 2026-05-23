@@ -72,11 +72,24 @@ namespace PimMedicationManagement.Controllers
             return Ok(new { message = "Box MedFlow configurada com sucesso!", tratamentoId = novoTratamento.Id });
         }
 
+        // GET: api/Tratamento (Todos os tratamentos do sistema - para admins/funcionarios)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Tratamento>>> GetTodosTratamentos()
+        {
+            return await _context.Tratamentos
+                .Include(t => t.Usuario)
+                .Include(t => t.Saches)
+                .ThenInclude(s => s.Medicamento)
+                .OrderByDescending(t => t.DataInicio)
+                .ToListAsync();
+        }
+
         // GET: api/Tratamento/Usuario/5 (Busca a Box de um paciente específico)
         [HttpGet("Usuario/{usuarioId}")]
         public async Task<ActionResult<IEnumerable<Tratamento>>> GetTratamentosPorUsuario(int usuarioId)
         {
             return await _context.Tratamentos
+                .Include(t => t.Usuario)
                 .Include(t => t.Saches)
                 .ThenInclude(s => s.Medicamento)
                 .Where(t => t.UsuarioId == usuarioId)

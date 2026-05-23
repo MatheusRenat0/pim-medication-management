@@ -153,3 +153,8 @@ Este projeto integra conhecimentos de diversas áreas como:
 Demonstrando, na prática, a aplicação de conceitos acadêmicos em um cenário realista de mercado.
 
 ---
+
+Login Admin: [admin@medflow.com] / admin123
+Login Funcionario: [func@medflow.com] / func123
+Login Paciente: [paciente@medflow.com] / paciente123
+Login Entregador: [entregador@medflow.com] / ent123

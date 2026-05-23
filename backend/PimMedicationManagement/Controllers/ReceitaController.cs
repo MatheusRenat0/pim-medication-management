@@ -70,6 +70,17 @@ namespace PimMedicationManagement.Controllers
                 .ToListAsync();
         }
 
+        // GET: api/Receita/usuario/5 (Receitas de um paciente específico)
+        [HttpGet("usuario/{usuarioId}")]
+        public async Task<ActionResult<IEnumerable<Receita>>> GetReceitasPorUsuario(int usuarioId)
+        {
+            return await _context.Receitas
+                .Where(r => r.UsuarioId == usuarioId)
+                .Include(r => r.Usuario)
+                .OrderByDescending(r => r.DataEnvio)
+                .ToListAsync();
+        }
+
         // PUT: api/Receita/Analise/5 (Farmacêutico aprova ou recusa)
         [HttpPut("analise/{id}")]
         public async Task<IActionResult> AnalisarReceita(int id, [FromBody] string novoStatus)

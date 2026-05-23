@@ -1,7 +1,10 @@
 <template>
-  <div class="animate-in">
-    <div class="page-header-row"><div><h1 class="page-title">Entregas</h1><p class="page-subtitle">Rastreamento e gestão de entregas</p></div>
-      <button class="btn btn-primary" @click="abrirModal()"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Nova Entrega</button></div>
+  <div v-if="auth.userType === 'Entregador'">
+    <EntregadorView />
+  </div>
+  <div v-else class="animate-in">
+    <div class="page-header-row"><div><h1 class="page-title">Entregas</h1><p class="page-subtitle">Rastreamento e status das suas entregas</p></div>
+      <button v-if="auth.userType !== 'Paciente'" class="btn btn-primary" @click="abrirModal()"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Nova Entrega</button></div>
     <div class="grid-2 mb-2" v-if="entregaSelecionada">
       <div class="card tracking-card">
         <h3 class="card-title">Rastreamento — Entrega #{{ entregaSelecionada.id }}</h3>
@@ -16,7 +19,7 @@
         <h3 class="card-title">Detalhes da Entrega</h3>
         <div class="detail-grid">
           <div class="detail-item"><span class="detail-label">Pedido</span><span>#{{ entregaSelecionada.pedidoId }}</span></div>
-          <div class="detail-item"><span class="detail-label">Entregador</span><span>{{ entregaSelecionada.entregador?.nome || 'ID: '+entregaSelecionada.entregadorId }}</span></div>
+          <div class="detail-item" v-if="auth.userType !== 'Paciente'"><span class="detail-label">Entregador</span><span>{{ entregaSelecionada.entregador?.nome || 'ID: '+entregaSelecionada.entregadorId }}</span></div>
           <div class="detail-item"><span class="detail-label">Destino</span><span>{{ entregaSelecionada.enderecoDestino }}</span></div>
           <div class="detail-item"><span class="detail-label">Previsão</span><span>{{ formatDate(entregaSelecionada.dataPrevista) }}</span></div>
           <div class="detail-item"><span class="detail-label">Status</span><span class="badge" :class="statusBadge(entregaSelecionada.statusLogistico)">{{ entregaSelecionada.statusLogistico }}</span></div>
@@ -26,15 +29,15 @@
       </div>
     </div>
     <div class="table-wrap">
-      <table class="data-table"><thead><tr><th>ID</th><th>Pedido</th><th>Entregador</th><th>Destino</th><th>Previsão</th><th>Status</th><th style="width:140px">Ações</th></tr></thead>
+      <table class="data-table"><thead><tr><th>ID</th><th>Pedido</th><th v-if="auth.userType !== 'Paciente'">Entregador</th><th>Destino</th><th>Previsão</th><th>Status</th><th style="width:140px">Ações</th></tr></thead>
         <tbody>
-          <tr v-for="e in entregas" :key="e.id"><td>#{{ e.id }}</td><td>#{{ e.pedidoId }}</td><td>{{ e.entregador?.nome || 'ID: '+e.entregadorId }}</td><td class="truncate" style="max-width:180px">{{ e.enderecoDestino }}</td>
+          <tr v-for="e in entregas" :key="e.id"><td>#{{ e.id }}</td><td>#{{ e.pedidoId }}</td><td v-if="auth.userType !== 'Paciente'">{{ e.entregador?.nome || 'ID: '+e.entregadorId }}</td><td class="truncate" style="max-width:180px">{{ e.enderecoDestino }}</td>
             <td>{{ formatDate(e.dataPrevista) }}</td><td><span class="badge" :class="statusBadge(e.statusLogistico)">{{ e.statusLogistico }}</span></td>
             <td><div class="actions">
               <button class="btn btn-outline btn-sm" @click="entregaSelecionada=e"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Rastrear</button>
-              <button class="btn btn-ghost btn-icon btn-sm" @click="abrirModal(e)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+              <button v-if="auth.userType !== 'Paciente'" class="btn btn-ghost btn-icon btn-sm" @click="abrirModal(e)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
             </div></td></tr>
-          <tr v-if="entregas.length===0"><td colspan="7" style="text-align:center;padding:32px;color:var(--text-muted)">Nenhuma entrega encontrada</td></tr>
+          <tr v-if="entregas.length===0"><td :colspan="auth.userType === 'Paciente' ? 6 : 7" style="text-align:center;padding:32px;color:var(--text-muted)">Nenhuma entrega encontrada</td></tr>
         </tbody></table>
     </div>
     <Modal v-model="showModal" :title="editando?'Editar Entrega':'Nova Entrega'" size="md">
@@ -50,9 +53,12 @@
 import { ref, computed, onMounted } from 'vue'
 import { useApi } from '../../composables/useApi'
 import { useToast } from '../../composables/useToast'
+import { useAuthStore } from '../../stores/auth'
 import Modal from '../../components/common/Modal.vue'
+import EntregadorView from './EntregadorView.vue'
 const { get, post, put } = useApi()
 const toast = useToast()
+const auth = useAuthStore()
 const entregas = ref([])
 const entregaSelecionada = ref(null)
 const showModal = ref(false)
@@ -64,7 +70,17 @@ function statusBadge(s) { return s==='Entregue'?'badge-success':s==='Atrasado'?'
 const stepAtivo = computed(() => { const s = entregaSelecionada.value?.statusLogistico; if(s==='Entregue') return 3; if(s==='Saiu para Entrega') return 2; return 1 })
 function abrirModal(e) { editando.value = !!e; formData.value = e ? { ...e, dataPrevista: e.dataPrevista?.split('T')[0] } : { pedidoId:0, entregadorId:0, enderecoDestino:'', dataPrevista:'', statusLogistico:'Pendente' }; showModal.value = true }
 async function salvar() { salvando.value = true; try { if (editando.value) { await put(`/Entrega/${formData.value.id}`, formData.value); toast.success('Entrega atualizada!') } else { await post('/Entrega', formData.value); toast.success('Entrega criada!') } showModal.value = false; await carregar() } catch(e) { toast.error(e.message) } finally { salvando.value = false } }
-async function carregar() { try { entregas.value = await get('/Entrega') } catch(e) { console.error(e) } }
+async function carregar() {
+  try {
+    if (auth.userType === 'Paciente') {
+      entregas.value = await get(`/Entrega/Usuario/${auth.userId}`)
+    } else {
+      entregas.value = await get('/Entrega')
+    }
+  } catch(e) {
+    console.error(e)
+  }
+}
 onMounted(carregar)
 </script>
 

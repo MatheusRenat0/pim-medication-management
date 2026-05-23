@@ -1,7 +1,7 @@
 <template>
   <aside class="sidebar" :class="{ collapsed }">
     <div class="sidebar-header">
-      <div class="logo" @click="$router.push('/dashboard')">
+      <div class="logo" @click="irParaHome">
       <div class="logo-icon">
           <img src="/logo.png" alt="MedFlow" style="width:28px;height:28px;object-fit:contain;" />
         </div>
@@ -14,7 +14,7 @@
 
     <nav class="sidebar-nav">
       <div class="nav-section" v-for="section in filteredMenu" :key="section.label">
-        <span v-if="!collapsed" class="nav-section-label">{{ section.label }}</span>
+        <span v-if="!collapsed && auth.userType !== 'Paciente' && auth.userType !== 'Entregador'" class="nav-section-label">{{ section.label }}</span>
         <router-link v-for="item in section.items" :key="item.to" :to="item.to" class="nav-item" :class="{ active: $route.path === item.to }">
           <span class="nav-icon" v-html="item.icon"></span>
           <span v-if="!collapsed" class="nav-label">{{ item.name }}</span>
@@ -58,7 +58,7 @@ const iconReport = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" 
 
 const menuSections = [
   { label: 'Principal', items: [
-    { name: 'Dashboard', to: '/dashboard', icon: iconDashboard, roles: ['all'] },
+    { name: 'Dashboard', to: '/dashboard', icon: iconDashboard, roles: ['Administrador','Funcionario'] },
   ]},
   { label: 'Cadastros', items: [
     { name: 'Usuários', to: '/usuarios', icon: iconUsers, roles: ['Administrador'] },
@@ -66,8 +66,8 @@ const menuSections = [
     { name: 'Estoque', to: '/estoque', icon: iconStock, roles: ['Administrador','Funcionario'] },
   ]},
   { label: 'Operações', items: [
-    { name: 'Receitas', to: '/receitas', icon: iconReceita, roles: ['all'] },
-    { name: 'Tratamentos', to: '/tratamentos', icon: iconTrat, roles: ['all'] },
+    { name: 'Receitas', to: '/receitas', icon: iconReceita, roles: ['Administrador','Funcionario','Paciente'] },
+    { name: 'Tratamentos', to: '/tratamentos', icon: iconTrat, roles: ['Administrador','Funcionario','Paciente'] },
     { name: 'Pedidos', to: '/pedidos', icon: iconPedido, roles: ['Administrador','Funcionario'] },
     { name: 'Entregas', to: '/entregas', icon: iconEntrega, roles: ['all'] },
   ]},
@@ -78,15 +78,46 @@ const menuSections = [
 
 const filteredMenu = computed(() => {
   const tipo = auth.userType
-  return menuSections.map(section => ({
-    ...section,
-    items: section.items.filter(item => item.roles.includes('all') || item.roles.includes(tipo))
-  })).filter(section => section.items.length > 0)
+  return menuSections.map(section => {
+    const items = section.items
+      .filter(item => item.roles.includes('all') || item.roles.includes(tipo))
+      .map(item => {
+        let name = item.name
+        if (tipo === 'Paciente') {
+          if (item.name === 'Receitas') name = 'Minhas Receitas'
+          else if (item.name === 'Tratamentos') name = 'Minha Box MedFlow'
+          else if (item.name === 'Entregas') name = 'Acompanhar Entrega'
+        } else if (tipo === 'Entregador') {
+          if (item.name === 'Entregas') name = 'Minhas Entregas'
+        } else {
+          // Admin/Funcionario
+          if (item.name === 'Dashboard') name = 'Painel Geral'
+          else if (item.name === 'Usuários') name = 'Gestão de Usuários'
+          else if (item.name === 'Medicamentos') name = 'Medicamentos & Fórmulas'
+          else if (item.name === 'Estoque') name = 'Controle de Estoque'
+          else if (item.name === 'Receitas') name = 'Aprovação de Receitas'
+          else if (item.name === 'Tratamentos') name = 'Rotinas de Tratamento'
+          else if (item.name === 'Pedidos') name = 'Pedidos & Faturamento'
+          else if (item.name === 'Entregas') name = 'Logística de Entregas'
+          else if (item.name === 'Relatórios') name = 'Relatórios Gerenciais'
+        }
+        return { ...item, name }
+      })
+    return { ...section, items }
+  }).filter(section => section.items.length > 0)
 })
 
 const handleLogout = () => {
   auth.logout()
   router.push('/login')
+}
+
+const irParaHome = () => {
+  if (auth.userType === 'Paciente') {
+    router.push('/receitas')
+  } else {
+    router.push('/dashboard')
+  }
 }
 </script>
 
@@ -96,11 +127,11 @@ const handleLogout = () => {
 
 .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 16px 16px; }
 .logo { display: flex; align-items: center; gap: 10px; cursor: pointer; text-decoration: none; }
-.logo-icon { width: 36px; height: 36px; background: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.logo-icon { width: 36px; height: 36px; background: #fff; border: 1.5px solid rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
 .logo-text { font-size: 18px; font-weight: 700; color: #fff; letter-spacing: -0.3px; white-space: nowrap; }
 .collapse-btn { background: none; border: none; color: var(--sidebar-text); cursor: pointer; padding: 6px; border-radius: 6px; display: flex; transition: all var(--transition); }
 .collapse-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
-.collapsed .collapse-btn { display: none; }
+.collapsed .collapse-btn { margin: 0 auto; }
 
 .sidebar-nav { flex: 1; overflow-y: auto; padding: 8px 12px; }
 .nav-section { margin-bottom: 8px; }

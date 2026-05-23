@@ -5,14 +5,11 @@
     <nav class="navbar" :class="{ scrolled: isScrolled }">
       <div class="nav-inner">
 
-        <a class="logo" href="#">
+        <a class="logo" @click.prevent="$router.push('/')">
           <div class="logo-icon">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-              <path d="M9 3v12M3 9h12" stroke="#fff" stroke-width="2.2" stroke-linecap="round" />
-            </svg>
+            <img src="/logo.png" alt="MedFlow" style="width:28px;height:28px;object-fit:contain;" />
           </div>
           <span class="logo-text">MedFlow</span>
-          <span class="logo-badge">Beta</span>
         </a>
 
         <div class="nav-actions">
@@ -103,25 +100,8 @@
           </template>
         </div>
 
-        <!-- OPÇÃO CONCIERGE -->
-        <div class="concierge-card">
-          <div class="concierge-badge">Serviço Premium</div>
-          <div class="concierge-body">
-            <div class="concierge-icon">◎</div>
-            <div>
-              <strong>Não quer preencher? A gente faz por você.</strong>
-              <p>Mande só a foto da receita. Nosso farmacêutico monta a sua rotina completa e envia para aprovação antes
-                de
-                produzir.</p>
-            </div>
-          </div>
-          <button class="btn-concierge" @click="ativarConcierge">
-            Usar serviço Concierge
-          </button>
-        </div>
-
         <div class="step-actions">
-          <button class="btn-primary" :disabled="!receitaArquivo" @click="avancarParaPasso2">
+          <button class="btn-primary" @click="avancarParaPasso2">
             Continuar para os medicamentos
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
@@ -292,22 +272,114 @@
       </div>
     </Transition>
 
+    <!-- ══════════════════════════════════════════ -->
+    <!-- PASSO 3: PAGAMENTO                         -->
+    <!-- ══════════════════════════════════════════ -->
+    <main v-if="passo === 3" class="setup-container">
+      <div class="setup-content narrow">
+        <div class="page-header">
+          <div class="section-label">Passo 3 de 3</div>
+          <h1>Finalize sua<br><em>assinatura.</em></h1>
+          <p class="hero-sub">Revise seus medicamentos, informe o endereço e escolha a forma de pagamento.</p>
+        </div>
+
+        <!-- Resumo da box -->
+        <div class="resumo-card">
+          <h3>Resumo da sua Box</h3>
+          <div v-for="s in sachesPorHorario" :key="s._index" class="resumo-item">
+            <span class="resumo-time">{{ s.horario }}</span>
+            <span>{{ s.nome }} — {{ s.quantidadeComprimidos }} comp.</span>
+          </div>
+          <div class="resumo-total">
+            <span>Total mensal estimado</span>
+            <strong>R$ 149,00</strong>
+          </div>
+        </div>
+
+        <!-- Endereço de Entrega -->
+        <div class="form-section">
+          <h3>Endereço de Entrega</h3>
+          <div class="form-row">
+            <div class="form-group" style="flex:1">
+              <label>CEP</label>
+              <input v-model="endereco.cep" placeholder="00000-000" maxlength="9" @input="maskCep" class="form-input" />
+            </div>
+            <div class="form-group" style="flex:2">
+              <label>Logradouro</label>
+              <input v-model="endereco.logradouro" placeholder="Rua, Avenida..." class="form-input" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group" style="flex:1">
+              <label>Número</label>
+              <input v-model="endereco.numero" placeholder="123" class="form-input" />
+            </div>
+            <div class="form-group" style="flex:2">
+              <label>Bairro</label>
+              <input v-model="endereco.bairro" placeholder="Centro" class="form-input" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group" style="flex:2">
+              <label>Cidade</label>
+              <input v-model="endereco.cidade" placeholder="São Paulo" class="form-input" />
+            </div>
+            <div class="form-group" style="flex:1">
+              <label>UF</label>
+              <input v-model="endereco.uf" placeholder="SP" maxlength="2" class="form-input" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Forma de Pagamento -->
+        <div class="form-section">
+          <h3>Forma de Pagamento</h3>
+          <div class="payment-tabs">
+            <button class="pay-tab" :class="{ active: formaPagamento === 'cartao' }" @click="formaPagamento = 'cartao'">💳 Cartão</button>
+            <button class="pay-tab" :class="{ active: formaPagamento === 'pix' }" @click="formaPagamento = 'pix'">◎ PIX</button>
+          </div>
+          <div v-if="formaPagamento === 'cartao'" class="cartao-form">
+            <div class="form-group"><label>Número do Cartão</label><input v-model="cartao.numero" placeholder="0000 0000 0000 0000" class="form-input" maxlength="19" /></div>
+            <div class="form-row">
+              <div class="form-group" style="flex:1"><label>Validade</label><input v-model="cartao.validade" placeholder="MM/AA" class="form-input" maxlength="5" /></div>
+              <div class="form-group" style="flex:1"><label>CVV</label><input v-model="cartao.cvv" placeholder="123" class="form-input" maxlength="4" /></div>
+            </div>
+            <div class="form-group"><label>Nome no Cartão</label><input v-model="cartao.nome" placeholder="Como está no cartão" class="form-input" /></div>
+          </div>
+          <div v-if="formaPagamento === 'pix'" class="pix-info">
+            <div class="pix-qr">
+              <div class="pix-placeholder">QR Code</div>
+              <p>Após finalizar, um QR Code será gerado para pagamento via PIX.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-actions">
+          <button class="btn-primary" @click="finalizarAssinatura" :disabled="finalizando">
+            {{ finalizando ? 'Finalizando...' : 'Finalizar Assinatura' }}
+            <svg v-if="!finalizando" width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <p class="step-note">Sem contrato · Cancele quando quiser</p>
+        </div>
+      </div>
+    </main>
+
     <!-- FOOTER -->
     <footer class="footer">
       <div class="footer-inner">
-        <a class="logo" href="#">
+        <a class="logo" @click.prevent="$router.push('/')">
           <div class="logo-icon">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-              <path d="M9 3v12M3 9h12" stroke="#fff" stroke-width="2.2" stroke-linecap="round" />
-            </svg>
+            <img src="/logo.png" alt="MedFlow" style="width:28px;height:28px;object-fit:contain;" />
           </div>
           <span class="logo-text">MedFlow</span>
         </a>
         <p>Feito com cuidado para quem cuida da saúde.</p>
         <div class="footer-links">
-          <a href="#">Termos de uso</a>
-          <a href="#">Privacidade</a>
-          <a href="#">Contato</a>
+          <a href="#" @click.prevent="$router.push('/termos')">Termos de uso</a>
+          <a href="#" @click.prevent="$router.push('/privacidade')">Privacidade</a>
+          <a href="#" @click.prevent="$router.push('/contato')">Contato</a>
         </div>
       </div>
     </footer>
@@ -407,16 +479,47 @@ const onDrop = (e) => {
   if (file) receitaArquivo.value = file
 }
 const avancarParaPasso2 = () => { passo.value = 2 }
-const ativarConcierge = () => {
-  alert('Serviço Concierge ativado! Um farmacêutico entrará em contato em até 24h.')
+
+// ── PASSO 3: PAGAMENTO ────────────────────────
+const endereco = ref({ cep: '', logradouro: '', numero: '', bairro: '', cidade: '', uf: '' })
+const formaPagamento = ref('cartao')
+const cartao = ref({ numero: '', validade: '', cvv: '', nome: '' })
+const finalizando = ref(false)
+
+const maskCep = () => {
+  let v = endereco.value.cep.replace(/\D/g, '').slice(0, 8)
+  if (v.length > 5) v = v.replace(/(\d{5})(\d)/, '$1-$2')
+  endereco.value.cep = v
 }
 
 // ── SALVAR ────────────────────────────────────
 const { get, post } = useApi()
 
 const salvarBox = async () => {
+  // Avança para passo 3 em vez de salvar direto
+  passo.value = 3
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+const finalizarAssinatura = async () => {
+  // Verifica autenticação
+  const userData = localStorage.getItem('medflow_user')
+  if (!userData) {
+    // Salva rascunho e redireciona para login
+    sessionStorage.setItem('medflow_box_draft', JSON.stringify({
+      saches: sachesSelecionados.value,
+      endereco: endereco.value,
+      receitaArquivo: receitaArquivo.value?.name || null
+    }))
+    alert('Você precisa estar logado para finalizar sua assinatura. Vamos te redirecionar para o login.')
+    window.location.href = '/login?redirect=/setup-box'
+    return
+  }
+
+  finalizando.value = true
+  const user = JSON.parse(userData)
   const payload = {
-    usuarioId: 1,
+    usuarioId: user.usuarioId,
     receitaId: 1,
     saches: sachesSelecionados.value.map(s => ({
       medicamentoId: s.medicamentoId,
@@ -426,10 +529,13 @@ const salvarBox = async () => {
   }
   try {
     await post('/Tratamento', payload)
-    alert('Sua Box MedFlow foi configurada!')
+    alert('🎉 Assinatura finalizada com sucesso! Sua Box MedFlow será entregue em breve.')
     sachesSelecionados.value = []
+    passo.value = 1
   } catch {
-    alert('Erro ao salvar a Box.')
+    alert('Erro ao finalizar a assinatura. Tente novamente.')
+  } finally {
+    finalizando.value = false
   }
 }
 
@@ -507,12 +613,14 @@ onMounted(async () => {
 .logo-icon {
   width: 34px;
   height: 34px;
-  background: #1d4ed8;
+  background: #fff;
+  border: 1.5px solid #e2e8f0;
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  overflow: hidden;
 }
 
 .logo-text {
@@ -1465,4 +1573,31 @@ input[type="time"]:focus {
     justify-content: center;
   }
 }
+
+/* ─── PASSO 3: PAGAMENTO ─────────────────────── */
+.resumo-card { background: #f8fafc; border: 1.5px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 32px; }
+.resumo-card h3 { font-family: Georgia, serif; font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 16px; }
+.resumo-item { display: flex; align-items: center; gap: 12px; font-size: 14px; color: #374151; padding: 8px 0; border-bottom: 1px solid #e2e8f0; }
+.resumo-time { font-weight: 700; color: #1d4ed8; font-size: 12px; background: #eff6ff; padding: 4px 10px; border-radius: 6px; }
+.resumo-total { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 16px; border-top: 2px solid #e2e8f0; font-size: 15px; color: #374151; }
+.resumo-total strong { font-size: 20px; color: #1d4ed8; }
+
+.form-section { background: #fff; border: 1.5px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 24px; }
+.form-section h3 { font-family: Georgia, serif; font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 20px; }
+.form-row { display: flex; gap: 12px; margin-bottom: 14px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.form-group label { font-size: 13px; font-weight: 600; color: #374151; }
+.form-input { padding: 11px 14px; border: 1.5px solid #d1d5db; border-radius: 10px; font-size: 14px; color: #0a0a0a; outline: none; transition: border-color 0.15s; font-family: inherit; background: #fff; width: 100%; }
+.form-input:focus { border-color: #2563eb; }
+.form-input::placeholder { color: #9ca3af; }
+
+.payment-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+.pay-tab { flex: 1; padding: 12px; border: 1.5px solid var(--border); border-radius: 10px; background: #fff; font-size: 14px; font-weight: 600; color: #374151; cursor: pointer; transition: all 0.15s; font-family: inherit; }
+.pay-tab.active { border-color: #2563eb; background: #eff6ff; color: #1d4ed8; }
+.pay-tab:hover:not(.active) { border-color: #93c5fd; }
+
+.cartao-form { display: flex; flex-direction: column; gap: 14px; }
+.pix-info { text-align: center; padding: 20px; }
+.pix-placeholder { width: 140px; height: 140px; background: #f1f5f9; border: 2px dashed #d1d5db; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: #9ca3af; margin: 0 auto 16px; }
+.pix-info p { font-size: 13px; color: #6b7280; line-height: 1.6; }
 </style>
