@@ -87,7 +87,10 @@
           <a href="#como-funciona" @click.prevent="scrollTo('como-funciona')" class="link-secondary">Ver como
             funciona</a>
         </div>
-        <p class="hero-note">Sem contrato. Cancele quando quiser.</p>
+        <div class="hero-note-badge">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l3 3 7-6" stroke="#1d4ed8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Sem contrato · Cancele quando quiser
+        </div>
       </div>
 
       <div class="hero-visual">
@@ -464,12 +467,14 @@ export default {
 .logo-icon {
   width: 34px;
   height: 34px;
-  background: #1d4ed8;
+  background: #fff;
+  border: 1.5px solid #e2e8f0;
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  overflow: hidden;
 }
 
 .logo-text {
@@ -799,6 +804,25 @@ export default {
   font-weight: 500;
 }
 
+.hero-note-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 100px;
+  border: 1px solid #bfdbfe;
+  animation: fadeInUp 0.6s ease 0.3s both;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* ─── BOX MOCKUP ──────────────────────────────── */
 .box-mockup {
   background: #e8edf2;
@@ -811,6 +835,12 @@ export default {
   width: 100%;
   max-width: 360px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.13);
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
 }
 
 .box-day {
@@ -1030,7 +1060,13 @@ section h2 {
   border: 1.5px solid var(--border);
   border-radius: var(--radius);
   padding: 24px;
-  transition: box-shadow var(--transition), transform var(--transition);
+  transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+}
+
+.benefit-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.10);
+  border-color: #bfdbfe;
 }
 
 .benefit-icon {

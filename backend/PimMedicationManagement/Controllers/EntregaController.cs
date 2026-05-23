@@ -36,6 +36,28 @@ namespace PimMedicationManagement.Controllers
             return entrega;
         }
 
+        // GET: api/Entrega/Usuario/5 (Entregas vinculadas aos pedidos de um paciente)
+        [HttpGet("Usuario/{usuarioId}")]
+        public async Task<ActionResult<IEnumerable<Entrega>>> GetEntregasPorUsuario(int usuarioId)
+        {
+            return await _context.Entregas
+                .Include(e => e.Pedido)
+                .Include(e => e.Entregador)
+                .Where(e => e.Pedido != null && e.Pedido.UsuarioId == usuarioId)
+                .ToListAsync();
+        }
+
+        // GET: api/Entrega/Entregador/4 (Entregas de um entregador específico)
+        [HttpGet("Entregador/{entregadorId}")]
+        public async Task<ActionResult<IEnumerable<Entrega>>> GetEntregasPorEntregador(int entregadorId)
+        {
+            return await _context.Entregas
+                .Include(e => e.Pedido)
+                .Include(e => e.Entregador)
+                .Where(e => e.EntregadorId == entregadorId)
+                .ToListAsync();
+        }
+
         [HttpPost]
         public async Task<ActionResult<Entrega>> PostEntrega(Entrega entrega)
         {

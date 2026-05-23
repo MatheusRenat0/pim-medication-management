@@ -80,20 +80,34 @@ namespace PimMedicationManagement.Controllers
         [HttpPost("seed")]
         public async Task<IActionResult> Seed()
         {
-            if (await _context.Usuarios.AnyAsync())
-                return BadRequest(new { mensagem = "Já existem usuários cadastrados. Seed cancelado." });
-
-            var usuarios = new List<Usuario>
+            var seeded = false;
+            if (!await _context.Usuarios.AnyAsync(u => u.Email == "admin@medflow.com"))
             {
-                new Usuario { Nome = "Admin MedFlow", Email = "admin@medflow.com", Cpf = "111.111.111-11", SenhaHash = "admin123", Tipo = "Administrador", DataCadastro = DateTime.Now },
-                new Usuario { Nome = "Carlos Funcionário", Email = "func@medflow.com", Cpf = "222.222.222-22", SenhaHash = "func123", Tipo = "Funcionario", DataCadastro = DateTime.Now },
-                new Usuario { Nome = "Maria Paciente", Email = "paciente@medflow.com", Cpf = "333.333.333-33", SenhaHash = "pac123", Tipo = "Paciente", DataCadastro = DateTime.Now }
-            };
+                _context.Usuarios.Add(new Usuario { Nome = "Admin MedFlow", Email = "admin@medflow.com", Cpf = "111.111.111-11", SenhaHash = "admin123", Tipo = "Administrador", DataCadastro = DateTime.Now });
+                seeded = true;
+            }
+            if (!await _context.Usuarios.AnyAsync(u => u.Email == "func@medflow.com"))
+            {
+                _context.Usuarios.Add(new Usuario { Nome = "Carlos Funcionário", Email = "func@medflow.com", Cpf = "222.222.222-22", SenhaHash = "func123", Tipo = "Funcionario", DataCadastro = DateTime.Now });
+                seeded = true;
+            }
+            if (!await _context.Usuarios.AnyAsync(u => u.Email == "paciente@medflow.com"))
+            {
+                _context.Usuarios.Add(new Usuario { Nome = "Maria Paciente", Email = "paciente@medflow.com", Cpf = "333.333.333-33", SenhaHash = "pac123", Tipo = "Paciente", DataCadastro = DateTime.Now });
+                seeded = true;
+            }
+            if (!await _context.Usuarios.AnyAsync(u => u.Email == "entregador@medflow.com"))
+            {
+                _context.Usuarios.Add(new Usuario { Nome = "Roberto Entregador", Email = "entregador@medflow.com", Cpf = "444.444.444-44", SenhaHash = "ent123", Tipo = "Entregador", DataCadastro = DateTime.Now });
+                seeded = true;
+            }
 
-            _context.Usuarios.AddRange(usuarios);
-            await _context.SaveChangesAsync();
-
-            return Ok(new { mensagem = "Usuários de teste criados com sucesso!", usuarios = usuarios.Select(u => new { u.Email, Senha = u.SenhaHash, u.Tipo }) });
+            if (seeded)
+            {
+                await _context.SaveChangesAsync();
+                return Ok(new { mensagem = "Usuários de teste criados/atualizados com sucesso!" });
+            }
+            return Ok(new { mensagem = "Todos os usuários de teste já existem." });
         }
 
         // ── Novos endpoints CRUD ──
@@ -149,6 +163,23 @@ namespace PimMedicationManagement.Controllers
             _context.Usuarios.Remove(usuario);
             await _context.SaveChangesAsync();
             return NoContent();
+        }
+
+        // Atualizar perfil do próprio usuário logado
+        [HttpPut("perfil")]
+        public async Task<IActionResult> AtualizarPerfil([FromBody] UsuarioPerfilUpdateDTO dto)
+        {
+            var logado = await GetUsuarioLogado();
+            if (logado == null)
+                return Unauthorized(new { mensagem = "Usuário não autenticado." });
+
+            if (!string.IsNullOrWhiteSpace(dto.Nome)) logado.Nome = dto.Nome;
+            if (!string.IsNullOrWhiteSpace(dto.Email)) logado.Email = dto.Email;
+            if (!string.IsNullOrWhiteSpace(dto.Cpf)) logado.Cpf = dto.Cpf;
+            if (!string.IsNullOrWhiteSpace(dto.SenhaNova)) logado.SenhaHash = dto.SenhaNova;
+
+            await _context.SaveChangesAsync();
+            return Ok(new { mensagem = "Perfil atualizado com sucesso!", nome = logado.Nome, email = logado.Email, cpf = logado.Cpf });
         }
     }
 }
